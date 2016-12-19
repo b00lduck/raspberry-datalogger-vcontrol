@@ -26,7 +26,7 @@ func main() {
                 log.Error(err)
             }
         }
-        time.Sleep(time.Second * 5)
+        time.Sleep(time.Second * 15)
     }
 
 }
