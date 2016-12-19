@@ -34,7 +34,6 @@ func (t temperature) Process() error {
         return err
     }
 
-    log.Info(temp)
     return t.setNewReading(temp)
 }
 
