@@ -12,15 +12,17 @@ func main() {
     vcd := vcontrold.NewVcontroldClient()
     defer vcd.Close()
 
-    t1 := reading.NewTemperatureReading(vcd, "temperature_air", "getTempA", 0.2)
+    readings := make([]reading.Reading, 0)
+
+    readings = append(readings, reading.NewTemperatureReading(vcd, "temperature_air", "getTempA", 0.2))
 
     for {
-
-        err := t1.Process()
-        if err != nil {
-            log.Error(err)
+        for _, v := range readings {
+            err := v.Process()
+            if err != nil {
+                log.Error(err)
+            }
         }
-
         time.Sleep(time.Second * 5)
     }
 
