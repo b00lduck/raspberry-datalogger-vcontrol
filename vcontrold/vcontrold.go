@@ -23,7 +23,6 @@ type vcontrold struct {
 func NewVcontroldClient() Vcontrold {
 
     host := os.Getenv("VCONTROLD_HOST")
-    host = "192.168.2.107:32774"
 
     connection, err := net.Dial("tcp", host)
     if err != nil {
