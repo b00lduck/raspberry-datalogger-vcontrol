@@ -15,6 +15,9 @@ func main() {
     readings := make([]reading.Reading, 0)
 
     readings = append(readings, reading.NewTemperatureReading(vcd, "temperature_air", "getTempA", 0.2))
+    readings = append(readings, reading.NewTemperatureReading(vcd, "temperature_hot_water_tank", "getTempWW", 0.2))
+    readings = append(readings, reading.NewTemperatureReading(vcd, "temperature_boiler", "getTempKist", 0.2))
+    readings = append(readings, reading.NewTemperatureReading(vcd, "temperature_exhaust", "getTempAbg", 0.2))
 
     for {
         for _, v := range readings {
