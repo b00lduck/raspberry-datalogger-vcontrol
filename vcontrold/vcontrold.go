@@ -1,13 +1,13 @@
 package vcontrold
 
 import (
-    "os"
     "net"
     "bufio"
     "fmt"
     log "github.com/Sirupsen/logrus"
     "strconv"
     "strings"
+    "os"
 )
 
 type Vcontrold interface {
@@ -26,7 +26,9 @@ func NewVcontroldClient() Vcontrold {
 
     connection, err := net.Dial("tcp", host)
     if err != nil {
-        log.Fatal(err)
+        log.WithField("err", err).
+            WithField("host", host).
+            Fatal("Error connection to vcontrold")
     }
 
     obj := vcontrold {
@@ -47,8 +49,8 @@ func (v vcontrold) ReadPrompt() error {
     }
 
     if message != "vctrld>" {
-        log.WithField("message", message).Fatal("Received wrong prompt")
-        return fmt.Errorf("Received wrong prompt")
+        log.WithField("message", message).Fatal("Received wrong prompt from vcontrold")
+        return fmt.Errorf("Received wrong prompt from vcontrold")
     }
 
     return nil

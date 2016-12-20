@@ -24,6 +24,9 @@ func main() {
             err := v.Process()
             if err != nil {
                 log.Error(err)
+                time.Sleep(time.Second * 60)
+            } else {
+                time.Sleep(time.Second * 1)
             }
         }
         time.Sleep(time.Second * 15)

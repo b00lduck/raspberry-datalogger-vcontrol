@@ -1,9 +1,9 @@
 package reading
 import (
     "math"
-    "github.com/b00lduck/raspberry-datalogger-dataservice-client"
     "github.com/b00lduck/raspberry-datalogger-vcontrol/vcontrold"
     log "github.com/Sirupsen/logrus"
+    "github.com/b00lduck/raspberry-datalogger-dataservice-client"
 )
 
 type temperature struct {
@@ -42,20 +42,28 @@ func (t *temperature) setNewReading(reading float64) error {
     // precision reduction
     limitedPrecisionValue := round(reading / t.precision) * t.precision
 
-    log.WithField("lpv", limitedPrecisionValue).
-	WithField("reading", reading).
-	WithField("precision", t.precision).
-	WithField("oldValue", t.oldValue).
-	Info("Set new reading")
+    log.WithField("code", t.code).
+        WithField("reading", reading).
+	    Info("Set new reading")
 
-    if math.Abs(float64(limitedPrecisionValue - t.oldValue)) > t.precision {
+    if math.Abs(float64(limitedPrecisionValue - t.oldValue)) >= t.precision {
+        log.WithField("code", t.code).
+            WithField("oldValue", t.oldValue).
+            WithField("limitedPrecisionValue", limitedPrecisionValue).
+            Info("Value has changed equal or more than the precision limit, updating now")
+
         if err := client.SendThermometerReading(t.code, limitedPrecisionValue); err != nil {
-	    log.Error(err)
+    	    log.WithField("err", err).Error("Error sending thermometer reading")
             return err
         } else {
-	    log.Info("oldvalue")
             t.reading.oldValue = limitedPrecisionValue
         }
+
+    } else {
+        log.WithField("code", t.code).
+            WithField("oldValue", t.oldValue).
+            WithField("limitedPrecisionValue", limitedPrecisionValue).
+            Info("Value has not changed equal or more than the precision limit, no update necessary")
     }
 
     return nil
