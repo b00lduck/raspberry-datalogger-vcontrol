@@ -8,7 +8,6 @@ type Reading interface {
 
 type reading struct {
     vcontrold vcontrold.Vcontrold
-
     oldValue float64
     code string
     command string
