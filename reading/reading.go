@@ -8,4 +8,6 @@ type reading struct {
     oldValue float64
     code string
     command string
+    min float64
+    max float64
 }

@@ -44,12 +44,20 @@ func (t *temperature) Process() error {
 
 func (t *temperature) setNewReading(reading float64) error {
 
-    // precision reduction
-    limitedPrecisionValue := round(reading / t.precision) * t.precision
-
     log.WithField("code", t.code).
         WithField("reading", reading).
-	    Info("Set new reading")
+        Debug("Set new reading")
+
+    if reading > t.max || reading < t.min {
+        log.WithField("code", t.code).
+            WithField("reading", reading).
+            WithField("min", t.min).
+            WithField("max", t.max).
+            Warn("Plausibility check failed")
+    }
+
+    // precision reduction
+    limitedPrecisionValue := round(reading / t.precision) * t.precision
 
     if math.Abs(float64(limitedPrecisionValue - t.oldValue)) >= t.precision {
         log.WithField("code", t.code).
