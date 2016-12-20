@@ -11,10 +11,9 @@ type temperature struct {
     precision float64
 }
 
-func NewTemperatureReading(vcontrold vcontrold.Vcontrold, code string, command string, precision float64) Reading {
+func NewTemperatureReading(code string, command string, precision float64) Reading {
     return &temperature{
         reading: reading{
-            vcontrold: vcontrold,
             code: code,
             command: command,
             oldValue: 0},
@@ -24,12 +23,18 @@ func NewTemperatureReading(vcontrold vcontrold.Vcontrold, code string, command s
 
 func (t *temperature) Process() error {
 
-    err := t.vcontrold.ReadPrompt()
+    vc, err := vcontrold.NewVcontroldClient()
+    if err != nil {
+        return err
+    }
+    defer vc.Close()
+
+    err = vc.ReadPrompt()
     if err != nil {
         return err
     }
 
-    temp, err := t.vcontrold.GetTemp(t.command)
+    temp, err := vc.GetTemp(t.command)
     if err != nil {
         return err
     }

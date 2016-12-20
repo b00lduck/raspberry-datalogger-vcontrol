@@ -20,7 +20,7 @@ type vcontrold struct {
     connection net.Conn
 }
 
-func NewVcontroldClient() Vcontrold {
+func NewVcontroldClient() (Vcontrold, error) {
 
     host := os.Getenv("VCONTROLD_HOST")
 
@@ -28,14 +28,15 @@ func NewVcontroldClient() Vcontrold {
     if err != nil {
         log.WithField("err", err).
             WithField("host", host).
-            Fatal("Error connection to vcontrold")
+            Error("Error connection to vcontrold")
+        return nil, err
     }
 
     obj := vcontrold {
         connection: connection,
     }
 
-    return obj
+    return obj, nil
 }
 
 func (v vcontrold) Close() {
@@ -49,7 +50,7 @@ func (v vcontrold) ReadPrompt() error {
     }
 
     if message != "vctrld>" {
-        log.WithField("message", message).Fatal("Received wrong prompt from vcontrold")
+        log.WithField("message", message).Error("Received wrong prompt from vcontrold")
         return fmt.Errorf("Received wrong prompt from vcontrold")
     }
 
