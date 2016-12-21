@@ -11,9 +11,11 @@ type temperature struct {
     precision float64
 }
 
-func NewTemperatureReading(code string, command string, precision float64) Reading {
+func NewTemperatureReading(code string, command string, precision float64, min float64, max float64) Reading {
     return &temperature{
         reading: reading{
+            min: min,
+            max: max,
             code: code,
             command: command,
             oldValue: 0},
@@ -54,7 +56,7 @@ func (t *temperature) setNewReading(reading float64) error {
             WithField("min", t.min).
             WithField("max", t.max).
             Warn("Plausibility check failed")
-        return
+        return nil
     }
 
     // precision reduction
