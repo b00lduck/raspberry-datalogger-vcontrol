@@ -54,6 +54,7 @@ func (t *temperature) setNewReading(reading float64) error {
             WithField("min", t.min).
             WithField("max", t.max).
             Warn("Plausibility check failed")
+        return
     }
 
     // precision reduction
