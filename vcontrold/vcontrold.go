@@ -74,7 +74,8 @@ func (v vcontrold) GetFlag(cmd string) (bool, error) {
     if err != nil {
         return false, err
     }
-    intVal, err := strconv.ParseInt(message, 10, 8)
+    splitted := strings.Split(message, "\n")
+    intVal, err := strconv.ParseInt(splitted[0], 10, 8)
     if err != nil {
         return false, err
     }
