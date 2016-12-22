@@ -13,7 +13,8 @@ import (
 type Vcontrold interface {
     Close()
     ReadPrompt() error
-    GetTemp(cmd string) (float64, error)
+    GetTemperature(cmd string) (float64, error)
+    GetFlag(cmd string) (bool, error)
 }
 
 type vcontrold struct {
@@ -57,7 +58,7 @@ func (v vcontrold) ReadPrompt() error {
     return nil
 }
 
-func (v vcontrold) GetTemp(cmd string) (float64, error) {
+func (v vcontrold) GetTemperature(cmd string) (float64, error) {
     fmt.Fprintf(v.connection, "%s\n", cmd)
     message, err := bufio.NewReader(v.connection).ReadString('\n')
     if err != nil {
@@ -65,4 +66,18 @@ func (v vcontrold) GetTemp(cmd string) (float64, error) {
     }
     splitted := strings.Split(message, " ")
     return strconv.ParseFloat(splitted[0], 64)
+}
+
+func (v vcontrold) GetFlag(cmd string) (bool, error) {
+    fmt.Fprintf(v.connection, "%s\n", cmd)
+    message, err := bufio.NewReader(v.connection).ReadString('\n')
+    if err != nil {
+        return false, err
+    }
+    intVal, err := strconv.ParseInt(message, 10, 8)
+    if err != nil {
+        return false, err
+    }
+
+    return intVal == 1, nil
 }

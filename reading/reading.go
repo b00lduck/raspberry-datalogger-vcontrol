@@ -1,13 +1,16 @@
 package reading
 
+import "math"
+
 type Reading interface {
     Process() error
 }
 
 type reading struct {
-    oldValue float64
     code string
     command string
-    min float64
-    max float64
+}
+
+func round(x float64) float64 {
+    return math.Floor(x + 0.5)
 }

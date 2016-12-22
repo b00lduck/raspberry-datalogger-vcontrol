@@ -9,17 +9,20 @@ import (
 type temperature struct {
     reading
     precision float64
+    min float64
+    max float64
+    oldValue float64
 }
 
 func NewTemperatureReading(code string, command string, precision float64, min float64, max float64) Reading {
     return &temperature{
         reading: reading{
-            min: min,
-            max: max,
             code: code,
-            command: command,
-            oldValue: 0},
+            command: command},
         precision: precision,
+        min: min,
+        max: max,
+        oldValue: 0,
     }
 }
 
@@ -36,7 +39,7 @@ func (t *temperature) Process() error {
         return err
     }
 
-    temp, err := vc.GetTemp(t.command)
+    temp, err := vc.GetTemperature(t.command)
     if err != nil {
         return err
     }
@@ -72,7 +75,7 @@ func (t *temperature) setNewReading(reading float64) error {
     	    log.WithField("err", err).Error("Error sending thermometer reading")
             return err
         } else {
-            t.reading.oldValue = limitedPrecisionValue
+            t.oldValue = limitedPrecisionValue
         }
 
     } else {
@@ -83,8 +86,4 @@ func (t *temperature) setNewReading(reading float64) error {
     }
 
     return nil
-}
-
-func round(x float64) float64 {
-    return math.Floor(x + 0.5)
 }
