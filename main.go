@@ -8,7 +8,7 @@ import (
 
 func main() {
 
-    readings := make([]reading.Reading, 4)
+    readings := make([]reading.Reading, 9)
 
     readings[0] = reading.NewTemperatureReading("temperature_air", "getTempA", 0.1, -40, 60)
     readings[1] = reading.NewTemperatureReading("temperature_hot_water_tank", "getTempWW", 0.2, 10, 100)
