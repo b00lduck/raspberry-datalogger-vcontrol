@@ -1,7 +1,7 @@
 FROM balenalib/raspberry-pi-golang AS builder
 COPY . /src
 WORKDIR /src
-RUN go build -o /app .
+RUN CGO_ENABLED=0 go build -a -ldflags '-extldflags "-static"' -o /app .
 
 FROM scratch
 COPY --from=builder /app /
