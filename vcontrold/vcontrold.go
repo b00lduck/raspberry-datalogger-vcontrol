@@ -4,7 +4,7 @@ import (
     "net"
     "bufio"
     "fmt"
-    log "github.com/Sirupsen/logrus"
+    log "github.com/sirupsen/logrus"
     "strconv"
     "strings"
     "os"
@@ -15,6 +15,7 @@ type Vcontrold interface {
     ReadPrompt() error
     GetTemperature(cmd string) (float64, error)
     GetFlag(cmd string) (bool, error)
+    GetPercent(cmd string) (float64, error)
 }
 
 type vcontrold struct {
@@ -59,6 +60,16 @@ func (v vcontrold) ReadPrompt() error {
 }
 
 func (v vcontrold) GetTemperature(cmd string) (float64, error) {
+    fmt.Fprintf(v.connection, "%s\n", cmd)
+    message, err := bufio.NewReader(v.connection).ReadString('\n')
+    if err != nil {
+        return 0, err
+    }
+    splitted := strings.Split(message, " ")
+    return strconv.ParseFloat(splitted[0], 64)
+}
+
+func (v vcontrold) GetPercent(cmd string) (float64, error) {
     fmt.Fprintf(v.connection, "%s\n", cmd)
     message, err := bufio.NewReader(v.connection).ReadString('\n')
     if err != nil {

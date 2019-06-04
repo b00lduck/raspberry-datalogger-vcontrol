@@ -2,7 +2,7 @@ package reading
 import (
     "math"
     "github.com/b00lduck/raspberry-datalogger-vcontrol/vcontrold"
-    log "github.com/Sirupsen/logrus"
+    log "github.com/sirupsen/logrus"
     "github.com/b00lduck/raspberry-datalogger-dataservice-client"
 )
 

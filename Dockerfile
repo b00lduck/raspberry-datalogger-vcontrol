@@ -1,9 +1,9 @@
-FROM rem/rpi-golang-1.7:latest
+FROM balenalib/raspberry-pi-golang AS builder
+COPY . /src
+WORKDIR /src
+RUN go build -o /app .
 
-WORKDIR /gopath/src/github.com/b00lduck/raspberry-datalogger-vcontrol
-ENTRYPOINT ["raspberry-datalogger-vcontrol"]
+FROM scratch
+COPY --from=builder /app /
+ENTRYPOINT [ "/app" ]
 
-ADD . /gopath/src/github.com/b00lduck/raspberry-datalogger-vcontrol
-RUN go get
-RUN go build
-USER root
