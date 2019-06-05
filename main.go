@@ -3,7 +3,7 @@ package main
 import (
     "time"
     log "github.com/sirupsen/logrus"
-    "github.com/b00lduck/raspberry-datalogger-vcontrol/reading"
+    "github.com/b00lduck/raspberry-datalogger-vcontrol/internal/reading"
 )
 
 func main() {
